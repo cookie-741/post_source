@@ -33,29 +33,29 @@ This will open the app in your browser at http://localhost:3000.
 
 ## Project Structure
 
+```
 post-search-app/
+│── public/
 │
-├── public/
-│   └── 
-│
-├── src/
+│── src/
 │   ├── components/
-│   │   ├── PostCard.jsx     # Component for rendering individual posts
-│   │   ├── PostList.jsx     # Component for rendering the list of posts
-│   │   └── SearchBar.jsx    # Search input with preview functionality
-├── pages/
-│   │   ├── PostsOverviewPage.jsx     # Page of overview posts
+│   │   ├── PostCard.jsx          # Component for rendering individual posts
+│   │   ├── PostList.jsx          # Component for rendering the list of posts
+│   │   └── SearchBar.jsx         # Search input with preview functionality
+│   │
+│   ├── pages/
+│   │   └── PostsOverviewPage.jsx # Page of overview posts
 │   │
 │   ├── services/
-│   │   └── api.js           # API call function to fetch posts
+│   │   └── api.js                # API call function to fetch posts
 │   │
-│   ├── App.jsx              # Main App component where the structure is defined
-│   └── main.jsx             # Entry point of the app
+│   ├── App.jsx                   # Main App component where the structure is defined
+│   └── main.jsx                   # Entry point of the app
 │
-├── tailwind.config.js       # Tailwind CSS configuration file
-├── package.json             # NPM package file
-└── README.md                # This file
-
+├── tailwind.config.js             # Tailwind CSS configuration file
+├── package.json                   # NPM package file
+└── README.md                      # This file
+```
 
 ## Detailed Explanation of Components
 
