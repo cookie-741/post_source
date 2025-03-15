@@ -1,15 +1,20 @@
-import { useState, useEffect } from 'react';
-import { getPosts } from '@/services/api';
+import { useState, useEffect } from "react";
+import { getPosts } from "@/services/api";
+import SearchBar from "./SearchBar";
+import PostCard from "./PostCard";
+import { ArrowLeft } from "lucide-react";
 
-const PostsList = () => {
+const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchPosts = async () => {
       setLoading(true);
       setError(null);
       try {
@@ -17,57 +22,92 @@ const PostsList = () => {
         const firstTenPosts = data.slice(0, 10);
         setPosts(firstTenPosts);
         setFilteredPosts(firstTenPosts);
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError("Failed to fetch posts.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchPosts();
   }, []);
 
-  useEffect(() => {
-    if (searchTerm) {
-      const results = posts.filter((post) =>
-        post.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredPosts(results);
-    } else {
+  const applySearch = () => {
+    const term = searchTerm.toLowerCase().trim();
+    if (!term) {
       setFilteredPosts(posts);
+      setIsSearching(false);
+      return;
     }
-  }, [searchTerm, posts]);
 
-  if (loading) return <p className="text-center text-xl text-gray-500">⏳ Loading posts...</p>;
-  if (error) return <p className="text-center text-xl text-red-500">❌ Error: {error}</p>;
+    const titleMatches = posts.filter((post) => post.title.toLowerCase().includes(term));
+    const bodyMatches = posts.filter(
+      (post) => !titleMatches.includes(post) && post.body.toLowerCase().includes(term)
+    );
+
+    setFilteredPosts([...titleMatches, ...bodyMatches]);
+    setIsSearching(true);
+  };
+
+  const resetSearch = () => {
+    setSearchTerm("");
+    setFilteredPosts(posts);
+    setIsSearching(false);
+  };
+  if (loading) 
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-lg text-gray-500 animate-pulse">Loading posts...</p>
+      </div>
+    );
+    
+  if (error) 
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-center text-lg text-[#be0303]">{error}</p>
+      </div>
+    );
+  
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      <div className="mb-6 flex justify-center">
-        <input
-          type="text"
-          placeholder="Search posts..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full max-w-md px-4 py-2 text-lg rounded-lg border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-600"
-        />
-      </div>
+    <section className="px-20 py-10">
+      <h1 className="text-5xl mb-4">Blog</h1>
 
-      <h2 className="text-3xl font-semibold text-center mb-8 text-blue-600">📌 List of Posts</h2>
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        onSubmit={applySearch}
+        searchResults={{
+          titles: posts.filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase())),
+          bodies: posts.filter(
+            (post) =>
+              !post.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+              post.body.toLowerCase().includes(searchTerm.toLowerCase())
+          ),
+        }}
+      />
+        <p className="text-[#382B83] text-xl font-semibold underline underline-offset-6 my-5">Latest Trending Blog</p>
+      {isSearching && (
+        <button
+          onClick={resetSearch}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mt-4"
+        >
+          <ArrowLeft size={20} />
+          Back to Main Page
+        </button>
+      )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredPosts.map((post) => (
-          <div
-            key={post.id}
-            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
-          >
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">{post.title}</h3>
-            <p className="text-gray-600 mb-4">{post.body}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+      {posts.length > 0 && filteredPosts.length === 0 ? (
+        <p className="text-center text-lg text-gray-500 mt-6">No matching posts found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+          {filteredPosts.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
+      )}
+    </section>
   );
 };
 
-export default PostsList;
+export default PostList;

@@ -1,93 +1,80 @@
-# Posts Fetcher
+# Post Search Application
 
-A simple React application that fetches posts from the [JSONPlaceholder](https://jsonplaceholder.typicode.com/posts) API and displays them in a list with a loading state and error handling. It uses **Axios** for making API requests and **Tailwind CSS** for styling the UI. The search box allows you to filter the posts.
+## Overview
+This project is a React-based front-end application designed to fetch and display a list of posts from an external API. It provides a search functionality where users can filter posts by their title and body. The application also features a clean and user-friendly UI, using Tailwind CSS for styling and Lucide icons for visual elements.
 
 ## Features
+-Search Functionality: Allows users to search through posts by title or body.
+-Preview Search: Displays a list of search suggestions while typing, categorized by title and body.
+-Error Handling: Gracefully handles loading states and errors from the API request.
+-User-Friendly UI: The interface is clean, responsive, and intuitive, with Lucide icons integrated.
+-Responsive Design: Adapts to various screen sizes, ensuring usability on desktop, tablet, and mobile devices.
 
-- Fetches data from the JSONPlaceholder API
-- Displays posts with titles and bodies
-- Shows a loading state while fetching data
-- Handles errors in case of failed API requests
-- Search box to filter posts based on titles
+## Technologies Used
+-React: JavaScript library for building user interfaces.
+-Tailwind CSS: Utility-first CSS framework for designing responsive layouts.
+-Lucide Icons: A collection of simple, customizable, and accessible icons.
+-Axios: For making API calls.
+-React Hooks: Used for managing state and side effects in functional components.
+Setup Instructions
 
-## Setup Instructions
+### 1. Clone the Repository
+git clone https://github.com/cookie-741/post_source.git
+cd post-search-app
 
-Follow these steps to get the project up and running:
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/posts-fetcher.git
-cd posts-fetcher
-
-2. Install dependencies
-Install the required dependencies using npm:
-
-bash
-Copy
-Edit
+### 2. Install Dependencies
+To install all the required dependencies, run:
 npm install
-3. Create an .env file
-Create a .env file at the root of the project to define the API URL:
 
-bash
-Copy
-Edit
-REACT_APP_API_URL=https://jsonplaceholder.typicode.com/posts
-4. Run the application
-After the dependencies are installed, start the development server:
+### 3. Start the Development Server
+Run the following command to start the app in development mode:
+npm run dev
+This will open the app in your browser at http://localhost:3000.
 
-bash
-Copy
-Edit
-npm start
-This will run the app at http://localhost:3000/. You can open this URL in your browser to view the application.
+## Project Structure
 
-Project Structure
-bash
-Copy
-Edit
-posts-fetcher/
+post-search-app/
+│
+├── public/
+│   └── 
 │
 ├── src/
 │   ├── components/
-│   │   ├── PostsList.jsx  # Displays posts in a list
-│   │   └── SearchBox.jsx  # Search bar for filtering posts
-│   ├── api/
-│   │   └── api.js         # API request logic (Axios)
-│   ├── App.jsx            # Main app component
-│   ├── index.js           # React entry point
-│   └── tailwind.config.js # Tailwind CSS configuration
+│   │   ├── PostCard.jsx     # Component for rendering individual posts
+│   │   ├── PostList.jsx     # Component for rendering the list of posts
+│   │   └── SearchBar.jsx    # Search input with preview functionality
+├── pages/
+│   │   ├── PostsOverviewPage.jsx     # Page of overview posts
+│   │
+│   ├── services/
+│   │   └── api.js           # API call function to fetch posts
+│   │
+│   ├── App.jsx              # Main App component where the structure is defined
+│   └── main.jsx             # Entry point of the app
 │
-├── .env                   # Environment variables
-├── package.json           # Project dependencies and scripts
-└── README.md              # Project documentation
-Approach
-Fetching Data:
-The data is fetched using Axios from the provided API endpoint (https://jsonplaceholder.typicode.com/posts). The request is made in an asynchronous manner with error handling for failed requests.
+├── tailwind.config.js       # Tailwind CSS configuration file
+├── package.json             # NPM package file
+└── README.md                # This file
 
-Displaying Data:
-After fetching the data, it is displayed in a responsive list format using Tailwind CSS for styling. Each post's title and body are shown in separate cards, making it easy for the user to read.
 
-Loading State:
-While waiting for the data to load, a loading spinner with the text "⏳ Loading posts..." is shown to let the user know that data is being fetched.
+## Detailed Explanation of Components
 
-Search Functionality:
-A search box allows users to filter posts based on the title. The search box updates the displayed posts dynamically as the user types.
+### 1. PostList.jsx
+This component is responsible for displaying the list of posts. It includes the logic for:
 
-Error Handling:
-If the API request fails, an error message is shown, letting the user know that something went wrong.
+Fetching the posts from the external API using the getPosts function.
+Displaying the posts, including their title and body.
+Handling the search functionality by filtering posts based on the search term.
+Displaying a loading indicator and error message when necessary.
 
-Tools & Libraries Used:
-React: For building the user interface.
-Axios: For making HTTP requests to the API.
-Tailwind CSS: For styling the UI with utility-first CSS.
-Jest + React Testing Library: For writing unit tests for the components.
-Run Tests
-To run tests for the project, use the following command:
+### 2. PostCard.jsx
+This component represents an individual post. It is used in the PostList.jsx to render the details of each post such as the title and body.
 
-bash
-Copy
-Edit
-npm test
-This will execute the tests, including loading and error-handling tests.
+### 3. SearchBox.jsx
+The search box component:
+Takes user input and dynamically filters the list of posts by both title and body.
+Shows a preview of matching results (both title and body) as the user types.
+Allows the user to click on a preview, which will populate the search box with the selected title.
+
+### 4. api.js
+The getPosts function fetches the first 10 posts from the external API (JSONPlaceholder).
